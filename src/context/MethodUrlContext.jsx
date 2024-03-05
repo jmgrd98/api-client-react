@@ -15,7 +15,7 @@ export const MethodUrlProvider = ({ children }) => {
     const [method, setMethod] = useState('GET');
     const [url, setUrl] = useState('');
     const [params, setParams] = useState([]);
-    const [body, setBody] = useState({});
+    const [body, setBody] = useState(null);
     const [data, setData] = useState([]);
 
     const updateMethod = (newMethod) => {
@@ -36,7 +36,7 @@ export const MethodUrlProvider = ({ children }) => {
 
     const handleSubmit = async () => {
         try {
-          const parsedBody = JSON.parse(body); // Parse the string into an object
+          const parsedBody = JSON.parse(body);
             console.log(parsedBody);
             const response = await axios({
                 method: method,
@@ -44,7 +44,7 @@ export const MethodUrlProvider = ({ children }) => {
                 data: parsedBody
             });
             console.log('Response:', response.data);
-            setData(response.data);
+            setData(response.data.message ? response.data.message : response.data);
         } catch (error) {
             console.error('Error:', error);
         }
