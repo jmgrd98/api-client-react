@@ -12,60 +12,68 @@ export const useMethodUrlContext = () => {
 };
 
 export const MethodUrlProvider = ({ children }) => {
-    const [method, setMethod] = useState('GET');
-    const [url, setUrl] = useState('');
-    const [params, setParams] = useState([]);
-    const [body, setBody] = useState(null);
-    const [data, setData] = useState([]);
+  const [method, setMethod] = useState('GET');
+  const [url, setUrl] = useState('');
+  const [params, setParams] = useState([]);
+  const [body, setBody] = useState(null);
+  const [headers, setHeaders] = useState([]);
+  const [data, setData] = useState([]);
 
-    const updateMethod = (newMethod) => {
-        setMethod(newMethod);
-    };
+  const updateMethod = (newMethod) => {
+      setMethod(newMethod);
+  };
 
-    const updateUrl = (newUrl) => {
-        setUrl(newUrl);
-    };
+  const updateUrl = (newUrl) => {
+      setUrl(newUrl);
+  };
 
-    const updateParams = (newParams) => {
-        setParams(newParams);
-    };
+  const updateParams = (newParams) => {
+      setParams(newParams);
+  };
 
-    const updateBody = (newBody) => {
-        setBody(newBody);
-    };
+  const updateBody = (newBody) => {
+      setBody(newBody);
+  };
 
-    const handleSubmit = async () => {
-        try {
-          const parsedBody = JSON.parse(body);
-            console.log(parsedBody);
-            const response = await axios({
-                method: method,
-                url: url,
-                data: parsedBody
-            });
-            console.log('Response:', response.data);
-            setData(response.data.message ? response.data.message : response.data);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
+  const updateHeaders = (newHeaders) => {
+      setHeaders(newHeaders);
+  };
 
-    const value = {
-        method,
-        url,
-        params,
-        body,
-        updateMethod,
-        updateUrl,
-        updateParams,
-        updateBody,
-        handleSubmit,
-        data
-    };
+  const handleSubmit = async () => {
+      try {
+          const parsedBody = body ? JSON.parse(body) : null;
+          const response = await axios({
+              method: method,
+              url: url,
+              params: params,
+              headers: headers,
+              data: parsedBody
+          });
+          console.log('Response:', response.data);
+          setData(response.data.message ? response.data.message : response.data);
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  };
 
-    return (
-        <MethodUrlContext.Provider value={value}>
-            {children}
-        </MethodUrlContext.Provider>
-    );
+  const value = {
+      method,
+      url,
+      params,
+      body,
+      headers,
+      updateMethod,
+      updateUrl,
+      updateParams,
+      updateBody,
+      updateHeaders,
+      handleSubmit,
+      data
+  };
+
+  return (
+      <MethodUrlContext.Provider value={value}>
+          {children}
+      </MethodUrlContext.Provider>
+  );
 };

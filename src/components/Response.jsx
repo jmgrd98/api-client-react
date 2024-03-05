@@ -20,7 +20,7 @@ function Response() {
   return (
     <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
           <div className='flex items-center gap-3'>
-            <p>Response</p>
+            <p className="text-xl font-bold">Response</p>
 
           </div>
 

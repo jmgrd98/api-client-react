@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
 import { CiCirclePlus } from "react-icons/ci";
@@ -9,42 +10,58 @@ import { useMethodUrlContext } from '../context/MethodUrlContext';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 function Request() {
-  const { params, updateParams, body, updateBody, handleSubmit } = useMethodUrlContext();
-
-  const [copied, setCopied] = useState(false);
-  const [request, setRequest] = useState('Params');
-
-  const handleCopy = () => {
-      navigator.clipboard.writeText(body); // Copy the body instead of the request
-      setCopied(true);
-      setTimeout(() => {
-          setCopied(false);
-      }, 2000);
-  };
-
-  const addParam = () => {
-      updateParams([...params, { name: '', value: '' }]);
-  };
-
-  const handleParamChange = (index, field, value) => {
-      const updatedParams = [...params];
-      updatedParams[index][field] = value;
-      updateParams(updatedParams);
-  };
-
-  const deleteParam = (index) => {
-      const updatedParams = [...params];
-      updatedParams.splice(index, 1);
-      updateParams(updatedParams);
-  };
-
-  const handleBodyChange = (value) => {
-      updateBody(value);
-  };
-
+    const { params, headers, updateParams, updateHeaders, body, updateBody, handleSubmit } = useMethodUrlContext();
+  
+    const [copied, setCopied] = useState(false);
+    const [request, setRequest] = useState('Params');
+  
+    const handleCopy = () => {
+        navigator.clipboard.writeText(body);
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 2000);
+    };
+  
+    const addField = () => {
+        if (request === 'Params') {
+            updateParams([...params, { name: '', value: '' }]);
+        } else if (request === 'Headers') {
+            updateHeaders([...headers, { name: '', value: '' }]);
+        }
+    };
+  
+    const handleFieldChange = (index, field, value) => {
+        if (request === 'Params') {
+            const updatedParams = [...params];
+            updatedParams[index][field] = value;
+            updateParams(updatedParams);
+        } else if (request === 'Headers') {
+            const updatedHeaders = [...headers];
+            updatedHeaders[index][field] = value;
+            updateHeaders(updatedHeaders);
+        }
+    };
+  
+    const deleteField = (index) => {
+        if (request === 'Params') {
+            const updatedParams = [...params];
+            updatedParams.splice(index, 1);
+            updateParams(updatedParams);
+        } else if (request === 'Headers') {
+            const updatedHeaders = [...headers];
+            updatedHeaders.splice(index, 1);
+            updateHeaders(updatedHeaders);
+        }
+    };
+  
+    const handleBodyChange = (value) => {
+        updateBody(value);
+    };
+  
     return (
         <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
-            <p className='mb-5'>Request</p>
+            <p className='mb-5 text-xl font-bold'>Request</p>
             <Box sx={{ minWidth: 120, maxWidth: 120 }}>
                 <FormControl fullWidth>
                     <Select
@@ -62,36 +79,61 @@ function Request() {
                     </Select>
                 </FormControl>
             </Box>
-
-            {request === 'Params' ? (
+  
+            {(request === 'Params' || request === 'Headers') ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
-                    <div className="flex items-center gap-5 mb-5">
-                        <p>Add param</p>
-                        <CiCirclePlus style={{ width: 25, height: 25, cursor: 'pointer'}} onClick={addParam}/>
-                    </div>
-
-                    {params.map((param, index) => (
-                        <div className='flex items-center gap-3 mb-2' key={index}>
-                            <input
-                                className='p-2 rounded'
-                                type='text'
-                                placeholder='name'
-                                value={param.name}
-                                onChange={(e) => handleParamChange(index, 'name', e.target.value)}
-                            />
-                            <input
-                                className='p-2 rounded'
-                                type='text'
-                                placeholder='value'
-                                value={param.value}
-                                onChange={(e) => handleParamChange(index, 'value', e.target.value)}
-                            />
-                            <FaTrash onClick={() => deleteParam(index)} style={{ cursor: 'pointer' }} />
-                        </div>
-                    ))}
+                    <Button onClick={addField} variant='contained' sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 5 }}>
+                        <p>Add {request === 'Params' ? 'param' : 'header'}</p>
+                        <CiCirclePlus style={{ width: 25, height: 25 }} />
+                    </Button>
+  
+                    {request === 'Params' && (
+                        params.map((param, index) => (
+                            <div className='flex items-center gap-3 mb-2' key={index}>
+                                <input
+                                    className='p-2 rounded'
+                                    type='text'
+                                    placeholder='name'
+                                    value={param.name}
+                                    onChange={(e) => handleFieldChange(index, 'name', e.target.value)}
+                                />
+                                <input
+                                    className='p-2 rounded'
+                                    type='text'
+                                    placeholder='value'
+                                    value={param.value}
+                                    onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
+                                />
+                                <FaTrash onClick={() => deleteField(index)} style={{ cursor: 'pointer' }} />
+                            </div>
+                        ))
+                    )}
+                    
+                    {request === 'Headers' && (
+                        headers.map((header, index) => (
+                            <div className='flex items-center gap-3 mb-2' key={index}>
+                                <input
+                                    className='p-2 rounded'
+                                    type='text'
+                                    placeholder='name'
+                                    value={header.name}
+                                    onChange={(e) => handleFieldChange(index, 'name', e.target.value)}
+                                />
+                                <input
+                                    className='p-2 rounded'
+                                    type='text'
+                                    placeholder='value'
+                                    value={header.value}
+                                    onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
+                                />
+                                <FaTrash onClick={() => deleteField(index)} style={{ cursor: 'pointer' }} />
+                            </div>
+                        ))
+                    )}
+  
                 </div>
             ) : null}
-
+  
             {request === 'Body' ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
                     <CodeEditor
