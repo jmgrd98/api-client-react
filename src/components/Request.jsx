@@ -6,40 +6,41 @@ import Select from '@mui/material/Select';
 import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
 import { CiCirclePlus } from "react-icons/ci";
 import { useMethodUrlContext } from '../context/MethodUrlContext';
+import CodeEditor from '@uiw/react-textarea-code-editor';
 
 function Request() {
-    const { params, updateParams, body, updateBody, handleSubmit } = useMethodUrlContext();
+  const { params, updateParams, body, updateBody, handleSubmit } = useMethodUrlContext();
 
-    const [copied, setCopied] = useState(false);
-    const [request, setRequest] = useState('Params');
+  const [copied, setCopied] = useState(false);
+  const [request, setRequest] = useState('Params');
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(JSON.stringify(request, null, 2));
-        setCopied(true);
-        setTimeout(() => {
-            setCopied(false);
-        }, 2000);
-    };
+  const handleCopy = () => {
+      navigator.clipboard.writeText(body); // Copy the body instead of the request
+      setCopied(true);
+      setTimeout(() => {
+          setCopied(false);
+      }, 2000);
+  };
 
-    const addParam = () => {
-        updateParams([...params, { name: '', value: '' }]);
-    };
+  const addParam = () => {
+      updateParams([...params, { name: '', value: '' }]);
+  };
 
-    const handleParamChange = (index, field, value) => {
-        const updatedParams = [...params];
-        updatedParams[index][field] = value;
-        updateParams(updatedParams);
-    };
+  const handleParamChange = (index, field, value) => {
+      const updatedParams = [...params];
+      updatedParams[index][field] = value;
+      updateParams(updatedParams);
+  };
 
-    const deleteParam = (index) => {
-        const updatedParams = [...params];
-        updatedParams.splice(index, 1);
-        updateParams(updatedParams);
-    };
+  const deleteParam = (index) => {
+      const updatedParams = [...params];
+      updatedParams.splice(index, 1);
+      updateParams(updatedParams);
+  };
 
-    const handleBodyChange = (e) => {
-        updateBody(e.target.value);
-    };
+  const handleBodyChange = (value) => {
+      updateBody(value);
+  };
 
     return (
         <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
@@ -93,13 +94,18 @@ function Request() {
 
             {request === 'Body' ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
-                    <textarea
+                    <CodeEditor
                         value={body}
-                        onChange={handleBodyChange}
-                        placeholder="Enter request body here"
-                        className="w-full h-48 p-2 rounded"
+                        language="json"
+                        placeholder="Write your JSON here"
+                        onChange={(e) => handleBodyChange(e.target.value)}
+                        padding={15}
+                        style={{
+                            backgroundColor: "#f5f5f5",
+                            fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                        }}
                     />
-                    <button onClick={handleCopy} className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2">
+                    <button onClick={handleSubmit} className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2">
                         {copied ? <FaCheck /> : <FaCopy />}
                     </button>
                 </div>
