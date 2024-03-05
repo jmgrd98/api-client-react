@@ -14,6 +14,8 @@ export const useMethodUrlContext = () => {
 export const MethodUrlProvider = ({ children }) => {
     const [method, setMethod] = useState('GET');
     const [url, setUrl] = useState('');
+    const [params, setParams] = useState([]);
+    const [body, setBody] = useState('');
     const [data, setData] = useState([]);
 
     const updateMethod = (newMethod) => {
@@ -24,11 +26,21 @@ export const MethodUrlProvider = ({ children }) => {
         setUrl(newUrl);
     };
 
+    const updateParams = (newParams) => {
+        setParams(newParams);
+    };
+
+    const updateBody = (newBody) => {
+        setBody(newBody);
+    };
+
     const handleSubmit = async () => {
         try {
             const response = await axios({
                 method: method,
                 url: url,
+                params: params,
+                data: body // Include body in the request
             });
             console.log('Response:', response.data);
             setData(response.data);
@@ -40,8 +52,12 @@ export const MethodUrlProvider = ({ children }) => {
     const value = {
         method,
         url,
+        params,
+        body,
         updateMethod,
         updateUrl,
+        updateParams,
+        updateBody,
         handleSubmit,
         data
     };

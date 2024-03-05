@@ -5,11 +5,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
 import { CiCirclePlus } from "react-icons/ci";
+import { useMethodUrlContext } from '../context/MethodUrlContext';
 
 function Request() {
+    const { params, updateParams, body, updateBody, handleSubmit } = useMethodUrlContext();
+
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
-    const [params, setParams] = useState([]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(JSON.stringify(request, null, 2));
@@ -20,20 +22,24 @@ function Request() {
     };
 
     const addParam = () => {
-        setParams([...params, { name: '', value: '' }]);
+        updateParams([...params, { name: '', value: '' }]);
     };
 
     const handleParamChange = (index, field, value) => {
-      const updatedParams = [...params];
-      updatedParams[index][field] = value;
-      setParams(updatedParams);
-  };
+        const updatedParams = [...params];
+        updatedParams[index][field] = value;
+        updateParams(updatedParams);
+    };
 
-  const deleteParam = (index) => {
-      const updatedParams = [...params];
-      updatedParams.splice(index, 1);
-      setParams(updatedParams);
-  };
+    const deleteParam = (index) => {
+        const updatedParams = [...params];
+        updatedParams.splice(index, 1);
+        updateParams(updatedParams);
+    };
+
+    const handleBodyChange = (e) => {
+        updateBody(e.target.value);
+    };
 
     return (
         <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
@@ -87,7 +93,12 @@ function Request() {
 
             {request === 'Body' ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
-                    <pre></pre>
+                    <textarea
+                        value={body}
+                        onChange={handleBodyChange}
+                        placeholder="Enter request body here"
+                        className="w-full h-48 p-2 rounded"
+                    />
                     <button onClick={handleCopy} className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2">
                         {copied ? <FaCheck /> : <FaCopy />}
                     </button>
