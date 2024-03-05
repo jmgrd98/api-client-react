@@ -6,7 +6,6 @@ function Response() {
 
   const { method, updateMethod, url, updateUrl, data } = useMethodUrlContext();
 
-    const [responseData, setResponseData] = useState(null);
   const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
@@ -25,7 +24,7 @@ function Response() {
 
           </div>
 
-          {method && (
+          {data.length > 0 && (
             <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
               <pre>{JSON.stringify(data, null, 2)}</pre>
               <button onClick={handleCopy} className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2">
