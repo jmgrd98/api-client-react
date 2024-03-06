@@ -115,11 +115,7 @@ const deleteField = (index) => {
                       <CiCirclePlus style={{ width: 25, height: 25 }} />
                   </Button>
 
-                  {(request === 'Params'
-                        ? params
-                        : request === 'Headers'
-                        ? headers
-                        : null).map((field, index) => (
+                  {((request === 'Params' && request !== 'Auth') ? params : headers).map((field, index) => (
                       <div className='flex items-center gap-3 mb-2' key={index}>
                           <input
                               className='p-2 rounded'
@@ -143,17 +139,21 @@ const deleteField = (index) => {
           ) : null}
 
             {request === 'Auth' ? (
-                <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
-                    <IoMdKey />
+                <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative flex flex-col gap-5'>
                     {tokens.map((token, index) => (
-                        <input
+                        <div className='flex items-center gap-3'>
+                            <IoMdKey />
+                            <input
                             key={index}
                             className='p-2 rounded'
                             type='text'
                             placeholder='token'
-                            value={token.value} // Access the 'value' property of the token object
-                            onChange={(e) => handleFieldChange(index, 'value', e.target.value)} // Update the 'value' field of the token object
+                            value={token.value}
+                            onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
                         />
+                        <FaTrash onClick={() => deleteField(index)} style={{ cursor: 'pointer' }} />
+                        </div>
+                        
                     ))}
                 </div>
             ) : null}
