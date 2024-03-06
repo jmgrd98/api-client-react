@@ -4,15 +4,43 @@ import { CiCirclePlus } from "react-icons/ci";
 import Button from '@mui/material/Button';
 
 function Sidebar() {
-  const { method, updateMethod } = useMethodUrlContext();
+  const { method, updateMethod, url, updateUrl, body, updateBody, headers, updateHeaders, params, updateParams } = useMethodUrlContext();
   const [requests, setRequests] = useState([]);
 
   const addNewRequest = () => {
-    setRequests([...requests, { method: method }]);
+    setRequests([...requests, { method: method, url: url, body: body, headers: headers, params: params }]);
   }
 
-  const getColorByMethod = (requestMethod) => {
-    return requestMethod === 'GET' ? 'primary' : 'success';
+  const updateInfo = (request) => {
+    console.log(request)
+    updateMethod(request.method);
+    updateUrl(request.url);
+    updateBody(request.body);
+  }
+
+  const getColorByMethod = (requestMethod, url) => {
+    let color = ''
+    switch (requestMethod){
+      case 'GET':
+        color = 'primary'
+        break;
+      case 'POST':
+        color = 'success'
+        break;
+      case 'PUT':
+        color = 'secondary'
+        break;
+      case 'PATCH':
+        color = 'secondary'
+        break;
+      case 'DELETE':
+        color = 'error'
+        break;
+      default:
+        color = 'primary'
+        break;
+    }
+    return color;
   };
 
   return (
@@ -27,7 +55,7 @@ function Sidebar() {
           variant='contained'
           color={getColorByMethod(request.method)}
           key={index}
-          onClick={() => updateMethod(request.method)}
+          onClick={() => updateInfo(request)}
         >
           {request.method}
         </Button>

@@ -16,9 +16,9 @@ function Request() {
   
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
-    useEffect(() => {
-      toast.error('Header must not be empty');
-  }, [response])
+//     useEffect(() => {
+//       toast.error('Header must not be empty');
+//   }, [response])
   
     const handleCopy = () => {
         navigator.clipboard.writeText(body);
