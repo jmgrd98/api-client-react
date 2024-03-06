@@ -18,8 +18,8 @@ function Request() {
     const [request, setRequest] = useState('Params');
 
     useEffect(() => {
-      if (showToast) {
-        toast.error('Header name must be a non-empty string');
+      if (showToast && toastMessage == 'header name must be a non-empty string') {
+        toast.error(toastMessage);
       }
     }, [showToast])
   

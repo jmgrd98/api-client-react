@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import { useMethodUrlContext } from '../context/MethodUrlContext';
+import { toast, ToastContainer } from 'react-toastify';
 
 function Header() {
-    const { method, updateMethod, url, updateUrl, handleSubmit } = useMethodUrlContext();
+    const { method, updateMethod, url, updateUrl, handleSubmit, showToast, toastMessage } = useMethodUrlContext();
+
+    useEffect(() => {
+        if (showToast) {
+            toast.error('Enter a URL');
+          }
+    }, [showToast])
 
     const handleMethodChange = (e) => {
         updateMethod(e.target.value);
@@ -18,6 +25,7 @@ function Header() {
     };
 
     return (
+        <>
         <div className="flex items-center w-full gap-5 top-0 p-5 h-1/6 bg-gray-700 text-white">
             <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
@@ -46,6 +54,19 @@ function Header() {
             />
             <Button variant="contained" onClick={handleSubmit}>Send</Button>
         </div>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        />
+        </>
     );
 }
 

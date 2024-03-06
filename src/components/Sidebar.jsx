@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 function Sidebar() {
   const { method } = useMethodUrlContext();
   const [requests, setRequests] = useState([]);
-  const [methodLabel, setMethodLabel] = useState('');
 
   const addNewRequest = () => {
     setRequests([...requests, { method: method }]);
@@ -20,9 +19,9 @@ function Sidebar() {
       </Button>
 
       {requests.map((request, index) => (
-        <div key={index}>
+        <Button variant='outlined' key={index}>
           {request.method}
-        </div>
+        </Button>
       ))}
     </div>
   )

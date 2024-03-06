@@ -44,6 +44,13 @@ export const MethodUrlProvider = ({ children }) => {
   };
 
   const handleSubmit = async () => {
+    if (url == '') {
+      setShowToast(true)
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+      return;
+    }
     try {
         const parsedBody = body ? JSON.parse(body) : null;
         const response = await axios({
@@ -64,6 +71,9 @@ export const MethodUrlProvider = ({ children }) => {
             setResponse(error.response);
             setMessage(error.message);
             setShowToast(true)
+            setTimeout(() => {
+              setShowToast(false);
+            }, 2000);
             setToastMessage(error.message);
         }
     };
