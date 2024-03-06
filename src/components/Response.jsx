@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { FaCopy, FaCheck } from 'react-icons/fa';
 import { useMethodUrlContext } from "../context/MethodUrlContext";
+import Chip from '@mui/material/Chip';
 
 function Response() {
 
-  const { method, updateMethod, url, updateUrl, data } = useMethodUrlContext();
+  const { method, updateMethod, url, updateUrl, data, response } = useMethodUrlContext();
 
   const [copied, setCopied] = useState(false);
 
@@ -17,10 +18,29 @@ function Response() {
           }, 2000);
         }
       };
+
+      const getColorByStatus = (status) => {
+        if (status >= 200 && status < 300) {
+          return 'success'; // Green
+        } else if (status >= 400 && status < 600) {
+          return 'error'; // Red
+        } else {
+          return 'default'; // Default color
+        }
+      };
+
   return (
     <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
-          <div className='flex items-center gap-3'>
+          <div className='flex flex-col gap-3'>
             <p className="text-xl font-bold">Response</p>
+
+          {response && 
+            <Chip 
+              label={`${response.status} ${response.statusText}`}
+              color={getColorByStatus(response.status)}
+              sx={{ width: '25%', fontWeight: 'bold'  }} 
+            />
+          }
 
           </div>
 

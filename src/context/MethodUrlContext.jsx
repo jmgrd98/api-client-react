@@ -18,6 +18,7 @@ export const MethodUrlProvider = ({ children }) => {
   const [body, setBody] = useState(null);
   const [headers, setHeaders] = useState([]);
   const [data, setData] = useState([]);
+  const [response, setResponse] = useState();
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);
@@ -42,14 +43,19 @@ export const MethodUrlProvider = ({ children }) => {
   const handleSubmit = async () => {
       try {
           const parsedBody = body ? JSON.parse(body) : null;
+          console.log(headers)
           const response = await axios({
               method: method,
               url: url,
               params: params,
-              headers: headers,
+              headers: {
+                // 'X-RapidAPI-Key': headers.find(header => header.name === 'X-RapidAPI-Key').value,
+                // 'X-RapidAPI-Host': headers.find(header => header.name === 'X-RapidAPI-Host').value
+              },
               data: parsedBody
           });
-          console.log('Response:', response.data);
+          console.log('Response:', response);
+          setResponse(response);
           setData(response.data.message ? response.data.message : response.data);
       } catch (error) {
           console.error('Error:', error);
@@ -68,7 +74,8 @@ export const MethodUrlProvider = ({ children }) => {
       updateBody,
       updateHeaders,
       handleSubmit,
-      data
+      data,
+      response
   };
 
   return (
