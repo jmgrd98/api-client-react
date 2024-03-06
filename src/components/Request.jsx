@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
-import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
+import { FaCopy, FaCheck, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { CiCirclePlus } from "react-icons/ci";
 import { useMethodUrlContext } from '../context/MethodUrlContext';
 import CodeEditor from '@uiw/react-textarea-code-editor';
@@ -17,6 +17,7 @@ function Request() {
   
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
+    const [showToken, setShowToken] = useState(true);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(body);
@@ -141,19 +142,31 @@ const deleteField = (index) => {
             {request === 'Auth' ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative flex flex-col gap-5'>
                     {tokens.map((token, index) => (
-                        <div className='flex items-center gap-3'>
+                        <div className='flex items-center gap-3' key={index}>
                             <IoMdKey />
-                            <input
-                            key={index}
-                            className='p-2 rounded'
-                            type='text'
-                            placeholder='token'
-                            value={token.value}
-                            onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
-                        />
-                        <FaTrash onClick={() => deleteField(index)} style={{ cursor: 'pointer' }} />
+                            <div style={{ position: 'relative', width: '100%' }}>
+                                <input
+                                    key={index}
+                                    className='p-2 rounded w-full'
+                                    type={showToken ? 'text' : 'password'}
+                                    placeholder='token'
+                                    value={token.value}
+                                    onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
+                                />
+                                {showToken ? (
+                                    <FaEyeSlash 
+                                        onClick={() => setShowToken(false)} 
+                                        style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: '10px', cursor: 'pointer' }} 
+                                    />
+                                ) : (
+                                    <FaEye 
+                                        onClick={() => setShowToken(true)} 
+                                        style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', right: '10px', cursor: 'pointer' }} 
+                                    />
+                                )}
+                            </div>
+                            <FaTrash onClick={() => deleteField(index)} style={{ cursor: 'pointer' }} />
                         </div>
-                        
                     ))}
                 </div>
             ) : null}
