@@ -20,6 +20,8 @@ export const MethodUrlProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [response, setResponse] = useState();
   const [message, setMessage] = useState();
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);
@@ -61,6 +63,8 @@ export const MethodUrlProvider = ({ children }) => {
         console.error('Error:', error);
             setResponse(error.response);
             setMessage(error.message);
+            setShowToast(true)
+            setToastMessage(error.message);
         }
     };
 
@@ -79,7 +83,9 @@ export const MethodUrlProvider = ({ children }) => {
       handleSubmit,
       data,
       response,
-      message
+      message,
+      showToast,
+      toastMessage
   };
 
   return (

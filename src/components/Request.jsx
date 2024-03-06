@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -8,12 +8,20 @@ import { FaCopy, FaCheck, FaTrash } from 'react-icons/fa';
 import { CiCirclePlus } from "react-icons/ci";
 import { useMethodUrlContext } from '../context/MethodUrlContext';
 import CodeEditor from '@uiw/react-textarea-code-editor';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Request() {
-    const { params, headers, updateParams, updateHeaders, body, updateBody, handleSubmit } = useMethodUrlContext();
+    const { params, headers, updateParams, updateHeaders, body, updateBody, showToast, toastMessage } = useMethodUrlContext();
   
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
+
+    useEffect(() => {
+      if (showToast) {
+        toast.error('Header name must be a non-empty string');
+      }
+    }, [showToast])
   
     const handleCopy = () => {
         navigator.clipboard.writeText(body);
@@ -32,6 +40,11 @@ const addField = () => {
 };
 
 const handleFieldChange = (index, field, value) => {
+      if (field == 'header' && value === '') {
+        console.error('Header name must be a non-empty string');
+        return;
+    }
+
     if (request === 'Params') {
         const updatedParams = [...params];
         updatedParams[index][field] = value;
@@ -60,6 +73,7 @@ const deleteField = (index) => {
     };
   
     return (
+      <>
         <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
             <p className='mb-5 text-xl font-bold'>Request</p>
             <Box sx={{ minWidth: 120, maxWidth: 120 }}>
@@ -130,6 +144,20 @@ const deleteField = (index) => {
                 </div>
             ) : null}
         </section>
+
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        />
+      </>
     );
 }
 
