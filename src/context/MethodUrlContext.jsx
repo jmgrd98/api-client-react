@@ -20,8 +20,6 @@ export const MethodUrlProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [response, setResponse] = useState();
   const [message, setMessage] = useState();
-  const [toastMessage, setToastMessage] = useState('');
-  const [showToast, setShowToast] = useState(false);
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);
@@ -44,12 +42,9 @@ export const MethodUrlProvider = ({ children }) => {
   };
 
   const handleSubmit = async () => {
-    if (url == '') {
-      setShowToast(true)
-      setTimeout(() => {
-        setShowToast(false);
-      }, 2000);
-      return;
+    if (url === '') {
+        setMessage('Enter a URL')
+        return;
     }
     try {
         const parsedBody = body ? JSON.parse(body) : null;
@@ -70,11 +65,6 @@ export const MethodUrlProvider = ({ children }) => {
         console.error('Error:', error);
             setResponse(error.response);
             setMessage(error.message);
-            setShowToast(true)
-            setTimeout(() => {
-              setShowToast(false);
-            }, 2000);
-            setToastMessage(error.message);
         }
     };
 
@@ -94,8 +84,6 @@ export const MethodUrlProvider = ({ children }) => {
       data,
       response,
       message,
-      showToast,
-      toastMessage
   };
 
   return (

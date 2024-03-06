@@ -8,13 +8,15 @@ import { useMethodUrlContext } from '../context/MethodUrlContext';
 import { toast, ToastContainer } from 'react-toastify';
 
 function Header() {
-    const { method, updateMethod, url, updateUrl, handleSubmit, showToast, toastMessage } = useMethodUrlContext();
+    const { method, updateMethod, url, updateUrl, response, handleSubmit, } = useMethodUrlContext();
 
-    useEffect(() => {
-        if (showToast) {
+    const validateAndSubmit = () => {
+        if (url === '') {
             toast.error('Enter a URL');
-          }
-    }, [showToast])
+            return;
+        }
+        handleSubmit();
+    }
 
     const handleMethodChange = (e) => {
         updateMethod(e.target.value);
@@ -52,20 +54,20 @@ function Header() {
                 onChange={(e) => handleUrlChange(e)}
                 placeholder="http://localhost:3000/"
             />
-            <Button variant="contained" onClick={handleSubmit}>Send</Button>
+            <Button variant="contained" onClick={validateAndSubmit}>Send</Button>
         </div>
         <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        />
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </>
     );
 }

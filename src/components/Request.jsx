@@ -12,16 +12,13 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Request() {
-    const { params, headers, updateParams, updateHeaders, body, updateBody, showToast, toastMessage } = useMethodUrlContext();
+    const { params, headers, updateParams, updateHeaders, body, updateBody, response } = useMethodUrlContext();
   
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
-
     useEffect(() => {
-      if (showToast && toastMessage == 'header name must be a non-empty string') {
-        toast.error(toastMessage);
-      }
-    }, [showToast])
+      toast.error('Header must not be empty');
+  }, [response])
   
     const handleCopy = () => {
         navigator.clipboard.writeText(body);
@@ -146,17 +143,17 @@ const deleteField = (index) => {
         </section>
 
         <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        />
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
       </>
     );
 }
