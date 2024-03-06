@@ -19,6 +19,7 @@ export const MethodUrlProvider = ({ children }) => {
   const [headers, setHeaders] = useState([]);
   const [data, setData] = useState([]);
   const [response, setResponse] = useState();
+  const [message, setMessage] = useState();
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);
@@ -41,26 +42,28 @@ export const MethodUrlProvider = ({ children }) => {
   };
 
   const handleSubmit = async () => {
-      try {
-          const parsedBody = body ? JSON.parse(body) : null;
-          console.log(headers)
-          const response = await axios({
-              method: method,
-              url: url,
-              params: params,
-              headers: {
-                // 'X-RapidAPI-Key': headers.find(header => header.name === 'X-RapidAPI-Key').value,
-                // 'X-RapidAPI-Host': headers.find(header => header.name === 'X-RapidAPI-Host').value
-              },
-              data: parsedBody
-          });
-          console.log('Response:', response);
-          setResponse(response);
-          setData(response.data.message ? response.data.message : response.data);
-      } catch (error) {
-          console.error('Error:', error);
-      }
-  };
+    try {
+        const parsedBody = body ? JSON.parse(body) : null;
+        const response = await axios({
+            method: method,
+            url: url,
+            params: params,
+            headers: headers.reduce((acc, header) => {
+                acc[header.name] = header.value;
+                return acc;
+            }, {}),
+            data: parsedBody
+        });
+        console.log('Response:', response);
+        setResponse(response);
+        setData(response.data.message ? response.data.message : response.data);
+    } catch (error) {
+        console.error('Error:', error);
+            setResponse(error.response);
+            setMessage(error.message);
+        }
+    };
+
 
   const value = {
       method,
@@ -75,7 +78,8 @@ export const MethodUrlProvider = ({ children }) => {
       updateHeaders,
       handleSubmit,
       data,
-      response
+      response,
+      message
   };
 
   return (
