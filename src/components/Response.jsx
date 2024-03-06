@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaCopy, FaCheck } from 'react-icons/fa';
 import { useMethodUrlContext } from "../context/MethodUrlContext";
 import Chip from '@mui/material/Chip';
+import { FaFileExport } from "react-icons/fa";
 
 function Response() {
   const { method, message, data, response } = useMethodUrlContext();
@@ -19,11 +20,11 @@ function Response() {
 
   const getColorByStatus = (status) => {
     if (status >= 200 && status < 300) {
-      return 'success'; // Green
+      return 'success';
     } else if (status >= 400 && status < 600) {
-      return 'error'; // Red
+      return 'error';
     } else {
-      return 'default'; // Default color
+      return 'default';
     }
   };
 
@@ -31,6 +32,12 @@ function Response() {
     <section className='border-2 border-gray-400 rounded-xl h-full p-5 w-1/2'>
       <div className='flex flex-col gap-3'>
         <p className="text-xl font-bold">Response</p>
+        {!response && (
+          <div className="mt-[120px] flex flex-col items-center justify-center gap-5">
+            <FaFileExport className="w-20 h-20 text-gray-200" />
+            <p className="text-xl  text-gray-400">Make a request</p>
+          </div>
+        )}
         {response && 
           <Chip 
             label={`${response.status} ${response.statusText}`}
@@ -47,8 +54,8 @@ function Response() {
           </button>
         </div>
       )}
-      {data && data.length > 0 && (
-        <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
+      {(data && data.length > 0) && (
+        <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] max-w-[500px] relative'>
           <pre>{JSON.stringify(data, null, 2)}</pre>
           <button onClick={handleCopy} className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2">
             {copied ? <FaCheck /> : <FaCopy />}
