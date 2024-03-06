@@ -27,16 +27,16 @@ export const MethodUrlProvider = ({ children }) => {
       setUrl(newUrl);
   };
 
-  const updateParams = (newParams) => {
+  const updateParams = (newParams = []) => {
       setParams(newParams);
   };
 
-  const updateBody = (newBody) => {
+  const updateBody = (newBody = '') => {
       setBody(newBody);
   };
 
-  const updateHeaders = (newHeaders) => {
-      setHeaders(newHeaders);
+  const updateHeaders = (newHeaders = []) => {
+    setHeaders(newHeaders);
   };
 
   const handleSubmit = async () => {
