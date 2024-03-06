@@ -28,7 +28,7 @@ function Header() {
 
     return (
         <>
-        <div className="flex items-center w-full gap-5 top-0 p-5 h-1/6 bg-gray-700 text-white">
+        <div className="flex items-center w-full gap-5 top-0 p-5 h-1/6 border-b bg-[#646165] border-gray-400 text-white">
             <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
                     <Select
@@ -48,7 +48,7 @@ function Header() {
                 </FormControl>
             </Box>
             <input
-                className='w-full p-3 rounded-xl text-black'
+                className='w-full p-3 rounded-xl text-black border border-gray-400'
                 type='text'
                 value={url}
                 onChange={(e) => handleUrlChange(e)}

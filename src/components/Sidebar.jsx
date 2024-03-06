@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMethodUrlContext } from '../context/MethodUrlContext';
 import { CiCirclePlus } from "react-icons/ci";
+import { FaTimes } from 'react-icons/fa'; // Import the FaTimes icon
 import Button from '@mui/material/Button';
 
 function Sidebar() {
@@ -17,6 +18,12 @@ function Sidebar() {
     updateUrl(request.url);
     updateBody(request.body);
   }
+
+  const deleteRequest = (index) => {
+    const updatedRequests = [...requests];
+    updatedRequests.splice(index, 1);
+    setRequests(updatedRequests);
+  };
 
   const getColorByMethod = (requestMethod, url) => {
     let color = ''
@@ -44,21 +51,24 @@ function Sidebar() {
   };
 
   return (
-    <div className="left-0 p-5 w-1/5 bg-gray-700 text-white flex flex-col gap-3">
+    <div className="left-0 p-5 w-1/5 bg-[#95A472] text-white flex flex-col gap-3">
       <Button onClick={addNewRequest} variant='contained' className="flex items-center gap-5">
         <p>Add a new request</p>
         <CiCirclePlus style={{ width: 25, height: 25, cursor: 'pointer'}}/>
       </Button>
 
       {requests.map((request, index) => (
-        <Button
-          variant='contained'
-          color={getColorByMethod(request.method)}
-          key={index}
-          onClick={() => updateInfo(request)}
-        >
-          {request.method}
-        </Button>
+        <div key={index} className="flex items-center justify-between">
+          <Button
+          sx={{ display: 'flex', alignItems: 'center', gap: 3, maxWidth: '150px'}}
+            variant='contained'
+            color={getColorByMethod(request.method)}
+            onClick={() => updateInfo(request)}
+          >
+            <p>{request.method}</p>
+            <FaTimes onClick={() => deleteRequest(index)} style={{ cursor: 'pointer' }} />
+          </Button>
+        </div>
       ))}
     </div>
   )
