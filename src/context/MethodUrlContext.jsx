@@ -20,6 +20,7 @@ export const MethodUrlProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [response, setResponse] = useState();
   const [message, setMessage] = useState();
+  const [tokens, setTokens] = useState([]);
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);
@@ -28,6 +29,10 @@ export const MethodUrlProvider = ({ children }) => {
   const updateUrl = (newUrl) => {
       setUrl(newUrl);
   };
+
+  const updateTokens = (newTokens = []) => {
+    setTokens(newTokens);
+};
 
   const updateParams = (newParams = []) => {
       setParams(newParams);
@@ -51,9 +56,16 @@ export const MethodUrlProvider = ({ children }) => {
         const response = await axios({
             method: method,
             url: url,
-            params: params,
+            params: params.reduce((acc, param) => {
+                acc[param.name] = param.value;
+                return acc;
+            }, {}),
             headers: headers.reduce((acc, header) => {
                 acc[header.name] = header.value;
+                return acc;
+            }, {}),
+            tokens: tokens.reduce((acc, token) => {
+                acc[token.name] = token.value;
                 return acc;
             }, {}),
             data: parsedBody
@@ -75,11 +87,13 @@ export const MethodUrlProvider = ({ children }) => {
       params,
       body,
       headers,
+      tokens,
       updateMethod,
       updateUrl,
       updateParams,
       updateBody,
       updateHeaders,
+      updateTokens,
       handleSubmit,
       data,
       response,

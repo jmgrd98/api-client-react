@@ -10,16 +10,14 @@ import { useMethodUrlContext } from '../context/MethodUrlContext';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IoMdKey } from "react-icons/io";
 
 function Request() {
-    const { params, headers, updateParams, updateHeaders, body, updateBody, response } = useMethodUrlContext();
+    const { params, headers, tokens, updateParams, updateHeaders, body, updateBody, updateTokens } = useMethodUrlContext();
   
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
-//     useEffect(() => {
-//       toast.error('Header must not be empty');
-//   }, [response])
-  
+
     const handleCopy = () => {
         navigator.clipboard.writeText(body);
         setCopied(true);
@@ -33,11 +31,13 @@ const addField = () => {
         updateParams([...params, { name: '', value: '' }]);
     } else if (request === 'Headers') {
         updateHeaders([...headers, { name: '', value: '' }]);
+    } else if (request === 'Auth') {
+        updateTokens([...tokens, { value: ''}])
     }
 };
 
 const handleFieldChange = (index, field, value) => {
-      if (field == 'header' && value === '') {
+      if ((field == 'header' || field == 'auth' || field == 'param') && value === '') {
         console.error('Header name must be a non-empty string');
         return;
     }
@@ -50,6 +50,10 @@ const handleFieldChange = (index, field, value) => {
         const updatedHeaders = [...headers];
         updatedHeaders[index][field] = value;
         updateHeaders(updatedHeaders);
+    } else if (request === 'Auth') {
+        const updatedTokens = [...tokens];
+        updatedTokens[index][field] = value;
+        updateTokens(updatedTokens);
     }
 };
 
@@ -62,6 +66,10 @@ const deleteField = (index) => {
         const updatedHeaders = [...headers];
         updatedHeaders.splice(index, 1);
         updateHeaders(updatedHeaders);
+    } else if (request === 'Auth') {
+        const updatedTokens = [...tokens];
+        updatedTokens.splice(index, 1);
+        updateTokens(updatedTokens);
     }
 };
   
@@ -91,14 +99,27 @@ const deleteField = (index) => {
                 </FormControl>
             </Box>
   
-            {(request === 'Params' || request === 'Headers') ? (
+            {(request === 'Params' || request === 'Headers' || request === 'Auth') ? (
               <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
                   <Button onClick={addField} variant='contained' sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 5 }}>
-                      <p>Add {request === 'Params' ? 'param' : 'header'}</p>
+                  <p>
+                    Add{' '}
+                    {request === 'Params'
+                        ? 'param'
+                        : request === 'Headers'
+                        ? 'header'
+                        : request === 'Auth'
+                        ? 'token'
+                        : null}
+                    </p>
                       <CiCirclePlus style={{ width: 25, height: 25 }} />
                   </Button>
 
-                  {(request === 'Params' ? params : headers).map((field, index) => (
+                  {(request === 'Params'
+                        ? params
+                        : request === 'Headers'
+                        ? headers
+                        : null).map((field, index) => (
                       <div className='flex items-center gap-3 mb-2' key={index}>
                           <input
                               className='p-2 rounded'
@@ -121,6 +142,21 @@ const deleteField = (index) => {
               </div>
           ) : null}
 
+            {request === 'Auth' ? (
+                <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
+                    <IoMdKey />
+                    {tokens.map((token, index) => (
+                        <input
+                            key={index}
+                            className='p-2 rounded'
+                            type='text'
+                            placeholder='token'
+                            value={token.value} // Access the 'value' property of the token object
+                            onChange={(e) => handleFieldChange(index, 'value', e.target.value)} // Update the 'value' field of the token object
+                        />
+                    ))}
+                </div>
+            ) : null}
   
             {request === 'Body' ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
