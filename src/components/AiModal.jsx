@@ -25,7 +25,7 @@ function AiModal({ onClose }) {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/completions', options);
+            const response = await fetch('http://54.207.142.190:5000/completions', options);
             const data = await response.json();
             console.log(data);
             updateAiRequest(data.choices[0].message);

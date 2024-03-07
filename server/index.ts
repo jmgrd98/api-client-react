@@ -9,6 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const OPENAI_API_KEY="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"
+
 app.get('/', (req: any, res: any) => {
     res.send('Hello, World!');
 });
@@ -18,7 +20,7 @@ app.post('/completions', async (req: any, res: any) => {
     const options = {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY || OPENAI_API_KEY}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
