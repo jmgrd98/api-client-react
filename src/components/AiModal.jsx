@@ -13,25 +13,51 @@ function AiModal({ onClose }) {
     }
 
     const handleAIGPT = async () => {
+        const OPENAI_API_KEY="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"
         const inputText = document.getElementById('textInput').value;
         const options = {
             method: 'POST',
-            body: JSON.stringify({
-              message: `Use HTTP verbs to make the request: ${inputText}. Give me only the request, do not say anything.`
-            }),
             headers: {
-              'Content-Type': 'application/json'
-            }
-        };
-
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: [
+                    {
+                        role: 'user',
+                        content: `Use HTTP verbs to make the request: ${inputText}. Give me only the request, do not say anything.`
+                    }
+                ],
+                max_tokens: 100
+            })
+        }
+    
         try {
-            const response = await fetch('http://54.207.142.190:5000/completions', options);
+            const response = await fetch('\n' + 'https://api.openai.com/v1/chat/completions', options);
             const data = await response.json();
-            console.log(data);
             updateAiRequest(data.choices[0].message);
         } catch (error) {
             console.error(error);
         }
+        // const options = {
+        //     method: 'POST',
+        //     body: JSON.stringify({
+        //       message: `Use HTTP verbs to make the request: ${inputText}. Give me only the request, do not say anything.`
+        //     }),
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     }
+        // };
+
+        // try {
+        //     const response = await fetch('http://54.207.142.190:5000/completions', options);
+        //     const data = await response.json();
+        //     console.log(data);
+        //     updateAiRequest(data.choices[0].message);
+        // } catch (error) {
+        //     console.error(error);
+        // }
         onClose();
     };
 

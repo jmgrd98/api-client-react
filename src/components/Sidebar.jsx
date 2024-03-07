@@ -62,8 +62,9 @@ function Sidebar() {
         <CiCirclePlus style={{ width: 25, height: 25, cursor: 'pointer'}}/>
       </Button>
 
+    <div className='flex flex-col gap-3'>
       {requests.map((request, index) => (
-        <div key={index} className="flex items-center justify-between">
+        <div key={index} className="flex items-center gap-5">
           <Button
           sx={{ display: 'flex', alignItems: 'center', gap: 3, maxWidth: '150px'}}
             variant='contained'
@@ -75,7 +76,7 @@ function Sidebar() {
           </Button>
         </div>
       ))}
-
+    </div>
 
       <Button variant='contained' color='secondary' onClick={() => setShowModal(true)} >Use AI</Button>
 
