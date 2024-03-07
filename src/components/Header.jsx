@@ -8,9 +8,10 @@ import { useMethodUrlContext } from '../context/MethodUrlContext';
 import { toast, ToastContainer } from 'react-toastify';
 
 function Header() {
-    const { method, updateMethod, url, updateUrl, response, handleSubmit, } = useMethodUrlContext();
+    const { method, updateMethod, url, updateUrl, aiRequest, handleSubmit, } = useMethodUrlContext();
 
     const validateAndSubmit = () => {
+        console.log(aiRequest)
         if (url === '') {
             toast.error('Enter a URL');
             return;
@@ -50,7 +51,7 @@ function Header() {
             <input
                 className='w-full p-3 rounded-xl text-black border border-gray-400'
                 type='text'
-                value={url}
+                value={aiRequest ? aiRequest.content : url}
                 onChange={(e) => handleUrlChange(e)}
                 placeholder="http://localhost:3000/"
             />

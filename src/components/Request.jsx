@@ -13,11 +13,38 @@ import 'react-toastify/dist/ReactToastify.css';
 import { IoMdKey } from "react-icons/io";
 
 function Request() {
-    const { params, headers, tokens, updateParams, updateHeaders, body, updateBody, updateTokens } = useMethodUrlContext();
+    const { 
+        params,
+        headers,
+        tokens,
+        updateParams,
+        updateHeaders,
+        body,
+        updateBody,
+        updateTokens,
+        aiRequest } = useMethodUrlContext();
   
     const [copied, setCopied] = useState(false);
     const [request, setRequest] = useState('Params');
     const [showToken, setShowToken] = useState(true);
+    const [json, setJson] = useState(null);
+
+    useEffect(() => {
+        // Extract the JSON string from aiRequest
+        if (aiRequest) {
+            const startIndex = aiRequest.content.indexOf('{');
+            const endIndex = aiRequest.content.lastIndexOf('}') + 1;
+            const extractedJson = aiRequest.content.substring(startIndex, endIndex);
+
+            // Parse the extracted JSON string into an object
+            try {
+                const parsedJson = JSON.parse(extractedJson);
+                setJson(JSON.stringify(parsedJson, null, 2)); // Stringify the JSON object
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+            }
+        }
+    }, [aiRequest]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(body);
@@ -174,7 +201,7 @@ const deleteField = (index) => {
             {request === 'Body' ? (
                 <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] relative'>
                     <CodeEditor
-                        value={body}
+                        value={aiRequest ? json : body}
                         language="json"
                         placeholder="Write your JSON here"
                         onChange={(e) => handleBodyChange(e.target.value)}

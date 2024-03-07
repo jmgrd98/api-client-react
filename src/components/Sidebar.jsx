@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { useMethodUrlContext } from '../context/MethodUrlContext';
 import { CiCirclePlus } from "react-icons/ci";
-import { FaTimes } from 'react-icons/fa'; // Import the FaTimes icon
+import { FaTimes } from 'react-icons/fa';
 import Button from '@mui/material/Button';
+import AiModal from './AiModal';
 
 function Sidebar() {
   const { method, updateMethod, url, updateUrl, body, updateBody, headers, updateHeaders, params, updateParams } = useMethodUrlContext();
   const [requests, setRequests] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const addNewRequest = () => {
     setRequests([...requests, { method: method, url: url, body: body, headers: headers, params: params }]);
   }
 
   const updateInfo = (request) => {
-    console.log(request)
     updateMethod(request.method);
     updateUrl(request.url);
     updateBody(request.body);
@@ -50,8 +51,12 @@ function Sidebar() {
     return color;
   };
 
+  const handleClose = () => {
+    setShowModal(false)
+}
+
   return (
-    <div className="left-0 p-5 w-1/5 bg-[#95A472] text-white flex flex-col gap-3">
+    <div className="left-0 p-5 w-1/5 bg-[#95A472] text-white flex flex-col justify-between gap-3">
       <Button onClick={addNewRequest} variant='contained' className="flex items-center gap-5">
         <p>Add a new request</p>
         <CiCirclePlus style={{ width: 25, height: 25, cursor: 'pointer'}}/>
@@ -70,6 +75,11 @@ function Sidebar() {
           </Button>
         </div>
       ))}
+
+
+      <Button variant='contained' color='secondary' onClick={() => setShowModal(true)} >Use AI</Button>
+
+        {showModal && <AiModal onClose={handleClose} />}
     </div>
   )
 }

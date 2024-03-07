@@ -21,6 +21,11 @@ export const MethodUrlProvider = ({ children }) => {
   const [response, setResponse] = useState();
   const [message, setMessage] = useState();
   const [tokens, setTokens] = useState([]);
+  const [aiRequest, setAiRequest] = useState('');
+
+  const updateAiRequest = (newAiRequest) => [
+    setAiRequest(newAiRequest)
+  ]
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);
@@ -98,6 +103,8 @@ export const MethodUrlProvider = ({ children }) => {
       data,
       response,
       message,
+      aiRequest,
+      updateAiRequest
   };
 
   return (
