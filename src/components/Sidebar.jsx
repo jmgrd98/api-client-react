@@ -58,7 +58,7 @@ function Sidebar() {
   return (
     <div className="left-0 p-5 w-1/5 bg-[#95A472] text-white flex flex-col justify-between gap-3">
       <Button onClick={addNewRequest} variant='contained' className="flex items-center gap-5">
-        <p>Add a new request</p>
+        <p>Save request</p>
         <CiCirclePlus style={{ width: 25, height: 25, cursor: 'pointer'}}/>
       </Button>
 
