@@ -40,24 +40,6 @@ function AiModal({ onClose }) {
         } catch (error) {
             console.error(error);
         }
-        // const options = {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //       message: `Use HTTP verbs to make the request: ${inputText}. Give me only the request, do not say anything.`
-        //     }),
-        //     headers: {
-        //       'Content-Type': 'application/json'
-        //     }
-        // };
-
-        // try {
-        //     const response = await fetch('http://54.207.142.190:5000/completions', options);
-        //     const data = await response.json();
-        //     console.log(data);
-        //     updateAiRequest(data.choices[0].message);
-        // } catch (error) {
-        //     console.error(error);
-        // }
         onClose();
     };
 

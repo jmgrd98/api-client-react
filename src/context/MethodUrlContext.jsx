@@ -23,9 +23,9 @@ export const MethodUrlProvider = ({ children }) => {
   const [tokens, setTokens] = useState([]);
   const [aiRequest, setAiRequest] = useState('');
 
-  const updateAiRequest = (newAiRequest) => [
-    setAiRequest(newAiRequest)
-  ]
+  const updateAiRequest = (newAiRequest) => {
+    setAiRequest(newAiRequest);
+  };
 
   const updateMethod = (newMethod) => {
       setMethod(newMethod);

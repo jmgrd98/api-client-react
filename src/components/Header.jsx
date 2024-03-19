@@ -9,8 +9,6 @@ import { toast, ToastContainer } from 'react-toastify';
 
 function Header() {
   const { method, updateMethod, url, updateUrl, aiRequest, handleSubmit } = useMethodUrlContext();
-//   const [httpVerb, setHttpVerb] = useState('');
-//   const [endpoint, setEndpoint] = useState('');
 
   const { httpVerb, endpoint } = useMemo(() => {
     let method = '';
@@ -24,13 +22,13 @@ function Header() {
             if (parsedMethod && parsedEndpoint) {
                 method = parsedMethod;
                 endpoint = parsedEndpoint;
+                console.log(method)
             }
         }
     }
-
-    return { method, endpoint };
+    console.log(method)
+    return { httpVerb: method, endpoint };
 }, [aiRequest]);
-
 
   const validateAndSubmit = () => {
     if (url === '') {
@@ -57,8 +55,7 @@ function Header() {
               sx={{ backgroundColor: 'white' }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={httpVerb || method} // Use httpVerb if available, otherwise use method
-              label="Method"
+              value={httpVerb || method}
               onChange={(e) => handleMethodChange(e)}
             >
               <MenuItem value={'GET'}>GET</MenuItem>
@@ -72,7 +69,7 @@ function Header() {
         <input
           className='w-full p-3 rounded-xl text-black border border-gray-400'
           type='text'
-          value={endpoint || url} // Use endpoint if available, otherwise use url
+          value={endpoint || url}
           onChange={(e) => handleUrlChange(e)}
           placeholder="http://localhost:3000/"
         />
