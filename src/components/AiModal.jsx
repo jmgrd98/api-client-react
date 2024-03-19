@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@mui/material";
 import { useMethodUrlContext } from "../context/MethodUrlContext";
+import { environment } from '../../environment';
 
 function AiModal({ onClose }) {
     const { updateAiRequest } = useMethodUrlContext();
@@ -17,7 +18,7 @@ function AiModal({ onClose }) {
         const options = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Authorization': `Bearer ${environment.openAIApiKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
