@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { useMethodUrlContext } from "../context/MethodUrlContext";
 import { environment } from '../../environment';
+import axios from "axios";
 
 function AiModal({ onClose }) {
     const { updateAiRequest } = useMethodUrlContext();
@@ -15,33 +16,24 @@ function AiModal({ onClose }) {
 
     const handleAIGPT = async () => {
         const inputText = document.getElementById('textInput').value;
-        const options = {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${environment.openAIApiKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'user',
-                        content: `Use HTTP verbs to make the request: ${inputText}. Give me only the request, do not say anything.`
-                    }
-                ],
-                max_tokens: 100
-            })
-        }
-    
+        const requestData = {
+            message: `Use HTTP verbs to make the request: ${inputText}. Give me only the request, do not say anything.`
+        };
+        
         try {
-            const response = await fetch('\n' + 'https://api.openai.com/v1/chat/completions', options);
-            const data = await response.json();
-            updateAiRequest(data.choices[0].message);
+            const response = await axios.post('http://localhost:5000/completions', requestData, {
+                headers: {
+                    'Authorization': `Bearer ${environment.openAIApiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            updateAiRequest(response.data.choices[0].message);
         } catch (error) {
             console.error(error);
         }
         onClose();
     };
+    
 
     return (
         <>
