@@ -21,7 +21,7 @@ function AiModal({ onClose }) {
         };
         
         try {
-            const response = await axios.post('http://localhost:5000/completions', requestData, {
+            const response = await axios.post('http://54.207.142.190:5000/completions', requestData, {
                 headers: {
                     'Authorization': `Bearer ${environment.openAIApiKey}`,
                     'Content-Type': 'application/json'
