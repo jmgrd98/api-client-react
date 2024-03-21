@@ -30,16 +30,14 @@ function Request() {
     const [json, setJson] = useState(null);
 
     useEffect(() => {
-        // Extract the JSON string from aiRequest
         if (aiRequest) {
             const startIndex = aiRequest.content.indexOf('{');
             const endIndex = aiRequest.content.lastIndexOf('}') + 1;
             const extractedJson = aiRequest.content.substring(startIndex, endIndex);
 
-            // Parse the extracted JSON string into an object
             try {
                 const parsedJson = JSON.parse(extractedJson);
-                setJson(JSON.stringify(parsedJson, null, 2)); // Stringify the JSON object
+                setJson(JSON.stringify(parsedJson, null, 2));
             } catch (error) {
                 console.error('Error parsing JSON:', error);
             }

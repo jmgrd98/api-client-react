@@ -23,7 +23,7 @@ function AiModal({ onClose }) {
         try {
             const response = await axios.post('http://54.207.142.190:5000/completions', requestData, {
                 headers: {
-                    'Authorization': `Bearer ${environment.openAIApiKey}`,
+                    'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
                     'Content-Type': 'application/json'
                 }
             });
