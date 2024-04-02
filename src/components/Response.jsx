@@ -5,12 +5,12 @@ import Chip from '@mui/material/Chip';
 import { FaFileExport } from "react-icons/fa";
 
 function Response() {
-  const { method, message, data, response } = useMethodUrlContext();
+  const { method, message, response } = useMethodUrlContext();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    if (data) {
-      navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+    if (response) {
+      navigator.clipboard.writeText(JSON.stringify(response, null, 2));
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
@@ -54,9 +54,9 @@ function Response() {
           </button>
         </div>
       )}
-      {(data && data.length > 0) && (
+      {(response) && (
         <div className='mt-5 bg-gray-300 p-3 rounded-xl overflow-y-scroll max-h-[400px] max-w-[500px] relative'>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+          <pre>{JSON.stringify(response, null, 2)}</pre>
           <button onClick={handleCopy} className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2">
             {copied ? <FaCheck /> : <FaCopy />}
           </button>

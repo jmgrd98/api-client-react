@@ -51,35 +51,55 @@ export const MethodUrlProvider = ({ children }) => {
     setHeaders(newHeaders);
   };
 
-  const handleSubmit = async () => {
-    if (url === '') {
-        setMessage('Enter a URL')
-        return;
-    }
-    try {
-        const parsedBody = body ? JSON.parse(body) : null;
-        const response = await axios({
-            method: method,
-            url: url,
-            params: params.reduce((acc, param) => {
-                acc[param.name] = param.value;
-                return acc;
-            }, {}),
-            headers: headers.reduce((acc, header) => {
-                acc[header.name] = header.value;
-                return acc;
-            }, {}),
-            tokens: tokens.reduce((acc, token) => {
-                acc[token.name] = token.value;
-                return acc;
-            }, {}),
-            data: parsedBody
-        });
-        console.log('Response:', response);
-        setResponse(response.data);
-        setData(response.data.message ? response.data.message : response.data);
-    } catch (error) {
-        console.error('Error:', error);
+    
+  const flattenResponseData = (response) => {
+    const flattenObject = (obj, parentKey = '') => {
+        return Object.keys(obj).reduce((acc, key) => {
+            const prefixedKey = parentKey ? `${parentKey}.${key}` : key;
+            if (typeof obj[key] === 'object' && obj[key] !== null && key === 'data') {
+                Object.assign(acc, flattenObject(obj[key], prefixedKey));
+            } else {
+                acc[prefixedKey] = obj[key];
+            }
+            return acc;
+        }, {});
+    };
+
+    return flattenObject(response);
+};
+
+
+    const handleSubmit = async () => {
+        if (url === '') {
+            setMessage('Enter a URL')
+            return;
+        }
+        try {
+            const parsedBody = body ? JSON.parse(body) : null;
+            const response = await axios({
+                method: method,
+                url: url,
+                params: params.reduce((acc, param) => {
+                    acc[param.name] = param.value;
+                    return acc;
+                }, {}),
+                headers: headers.reduce((acc, header) => {
+                    acc[header.name] = header.value;
+                    return acc;
+                }, {}),
+                tokens: tokens.reduce((acc, token) => {
+                    acc[token.name] = token.value;
+                    return acc;
+                }, {}),
+                data: parsedBody
+            });
+
+            const flattenedResponse = flattenResponseData(response);
+            console.log('Response:', flattenedResponse);
+            setResponse(flattenedResponse);
+            setData(response.data.message ? response.data.message : response.data);
+        } catch (error) {
+            console.error('Error:', error);
             setResponse(error.response);
             setMessage(error.message);
         }

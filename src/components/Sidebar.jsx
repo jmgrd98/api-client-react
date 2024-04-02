@@ -78,7 +78,7 @@ function Sidebar() {
       ))}
     </div>
 
-      <Button variant='contained' color='secondary' onClick={() => setShowModal(true)} >Use AI</Button>
+      {/* <Button variant='contained' color='secondary' onClick={() => setShowModal(true)} >Use AI</Button> */}
 
         {showModal && <AiModal onClose={handleClose} />}
     </div>
