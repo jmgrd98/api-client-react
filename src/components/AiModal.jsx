@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@mui/material";
 import { useMethodUrlContext } from "../context/MethodUrlContext";
-import { environment } from '../../environment';
 import axios from "axios";
 
 function AiModal({ onClose }) {
@@ -21,7 +20,7 @@ function AiModal({ onClose }) {
         };
         
         try {
-            const response = await axios.post('http://54.207.142.190:5000/completions', requestData, {
+            const response = await axios.post('https://chatgpt-server-completions.onrender.com/completions', requestData, {
                 headers: {
                     'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
                     'Content-Type': 'application/json'

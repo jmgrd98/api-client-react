@@ -76,7 +76,7 @@ export const MethodUrlProvider = ({ children }) => {
             data: parsedBody
         });
         console.log('Response:', response);
-        setResponse(response);
+        setResponse(response.data);
         setData(response.data.message ? response.data.message : response.data);
     } catch (error) {
         console.error('Error:', error);
